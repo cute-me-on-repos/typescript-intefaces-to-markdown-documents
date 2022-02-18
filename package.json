@@ -1,0 +1,36 @@
+{
+  "name": "tst2md",
+  "version": "1.0.0",
+  "description": "a ts types to markdown compiler",
+  "main": "index.js",
+  "author": {
+    "name": "Thien Ly",
+    "url": "https://github.com/lyluongthien",
+    "githubUsername": "lyluongthien"
+  },
+  "license": "MIT",
+  "private": false,
+  "bin": {
+    "tst2md": "./build/cli.js"
+  },
+  "scripts": {
+    "build": "npx tsc",
+    "start": "npx tsc -w",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "package": "pkg . --targets node14-macos-x64 --output tst2md",
+    "archive": "tar -cvzf tst2md-macos-x64.tar.gz",
+    "signature": "sha256sum tst2md-macos-x64.tar.gz"
+  },
+  "pkg": {
+    "scripts": "build/**/*.js"
+  },
+  "devDependencies": {
+    "@types/node": "^17.0.18",
+    "@types/yargs": "^17.0.8",
+    "pkg": "^5.5.2",
+    "typescript": "^4.5.5"
+  },
+  "dependencies": {
+    "yargs": "^17.3.1"
+  }
+}

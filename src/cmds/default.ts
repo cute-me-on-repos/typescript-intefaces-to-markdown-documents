@@ -5,7 +5,7 @@ type Options = {
     outDir?: string
 };
 
-export const command: string[] = ['$0  <outDir> [files..]', 'compile [files..]'];
+export const command: string[] = ['$0 [outDir] [files..]', 'compile [files..]'];
 export const desc: string = 'compile ts types to markdown files';
 
 

@@ -2,7 +2,7 @@
   "name": "tst2md",
   "version": "1.0.0",
   "description": "a ts types to markdown compiler",
-  "main": "index.js",
+  "main": "src/tst2md.js",
   "author": {
     "name": "Thien Ly",
     "url": "https://github.com/lyluongthien",
@@ -11,7 +11,7 @@
   "license": "MIT",
   "private": false,
   "bin": {
-    "tst2md": "./build/cli.js"
+    "tst2md": "./build/tst2md.js"
   },
   "scripts": {
     "build": "npx tsc",

@@ -1,6 +1,7 @@
 {
   "compilerOptions": {
     "target": "es5",
+    "lib": ["es2021"],
     "module": "commonjs",
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
@@ -9,5 +10,6 @@
     "outDir": "build",
     "importHelpers": false
   },"include": ["src"],
+
   "exclude": ["node_modules"]
 }

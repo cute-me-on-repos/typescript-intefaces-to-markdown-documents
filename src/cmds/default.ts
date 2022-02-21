@@ -37,15 +37,14 @@ export const handler = (argv: Arguments<Options>): void => {
 
 
 
-    const fileEntities:Array<FileEntity> = [];
-
-    files.forEach(path => {
+    const fileEntities: Array<FileEntity> = [];
+    for (let index = 0; index < files.length; index++) {
+        const path = files[index];
         const newFileEntity = new FileEntity(path)
-        fileEntities.push(newFileEntity);
-        // console.log(newFileEntity.preview());
+        fileEntities.push(newFileEntity); 
         Extractor.extract(newFileEntity, outDir)
-    });
 
+    }
 
     process.exit(0);
 };

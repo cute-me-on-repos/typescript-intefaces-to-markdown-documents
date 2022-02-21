@@ -6,21 +6,21 @@
 /**
  * API xịn
  */
- export interface JSAPIRequest {
+ export interface JSAPIRequestMain {
   /**
    *
    * `my.request` là API dùng để thực hiện các network request. Hiện chỉ hỗ trợ những request qua giao thức **https**.
    * Ứng dụng của bạn sẽ được chạy trong môi trường cô lập thuần javascript nên sẽ không có các hàm gọi network thông thường như `fetch` hay `XMLHttpRequest`. Để thực hiện gọi network bạn phải dùng đến `my.request`.
    *
    * ***Quan trọng***: Bạn cần phải thêm tên miền trong phần **Cài đặt chung** của ứng dụng trên [Tini Console](https://developer.tiki.vn/apps) trước khi sử dụng các Networking API và Webview. Xem phần hướng dẫn [tại đây](/docs/development/tini-console/whitelist-domains).
-   *
-   * @param paramsObject - Để cấu hình việc gọi network, bạn cần truyền một params object:
-   * @returns task API trả về network request task. Bạn có thể thực hiện huỷ việc gọi network thông qua network request task.
    */
   <Data extends Object>(paramsObject: JSAPIRequestOption<Data>): JSAPIRequestReturn;
 }
 
 
+/**
+ * Để cấu hình việc gọi network, bạn cần truyền một params object:
+ */
 export interface JSAPIRequestOption<Data extends Object = {}> {
   /**
    * Đường dẫn muốn gọi tới.
@@ -85,8 +85,7 @@ export interface JSAPIRequestOption<Data extends Object = {}> {
   complete?: Function;
 }
 
-
-export interface JSAPIRequestSuccessPayload<Data extends Object = {}> {
+ export interface JSAPIRequestSuccessPayload<Data extends Object = {}> {
   /**
    * Dữ liệu trả về. Định dạng của nó phụ thuộc vào tuộc tính dataType.
    */
@@ -106,6 +105,9 @@ export interface JSAPIRequestSuccessPayload<Data extends Object = {}> {
   statusText: 'OK' | 'Continue' | 'Not Found';
 }
 
+/**
+ * task API trả về network request task. Bạn có thể thực hiện huỷ việc gọi network thông qua network request task.
+ */
 export interface JSAPIRequestReturn {
   /**
    * abort network request
@@ -114,7 +116,7 @@ export interface JSAPIRequestReturn {
 }
 /// khi dung ben tinitype
 
-declare const myRequest: JSAPIRequest;
+declare const myRequest: JSAPIRequestMain;
 
 myRequest<{ va: string }>({
   url: '',

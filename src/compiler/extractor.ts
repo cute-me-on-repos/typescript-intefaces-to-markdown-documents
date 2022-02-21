@@ -1,66 +1,114 @@
-import { writeFile } from "fs";
+import { existsSync, mkdirSync, writeFile, writeFileSync } from "fs";
+import { outputFileSync } from "fs-extra";
 import path from "path";
-import { Node, Project, ScriptTarget, SyntaxKind } from "ts-morph";
+import { Node, Project, ScriptTarget } from "ts-morph";
 import { FileEntity } from "../entities/fileEntity";
-import { tsquery } from '@phenomnomnominal/tsquery';
-const serialize = require('serialize-javascript');
+import { mapDataToTemplate } from "./consts";
+
+ 
 
 
+interface NodeData {
+    name: string;
+    desc: string;
+    props: {
+        name: string;
+        typeName: string;
+        required: boolean;
+        desc: string;
+        defaultValue?: string | undefined;
+    }[];
+}
+
+interface ExtractedData {
+    Main: NodeData,
+    Option: NodeData,
+    Payload: NodeData,
+    Return: NodeData,
+}
+
+ 
 const extract = (fileEntity: FileEntity, outDir: string) => {
-
     const project = new Project({
         compilerOptions: {
             target: ScriptTarget.ES2020,
             skipAddingFilesFromTsConfig: true,
-
         }
     });
     const sourceFile = project.addSourceFilesAtPaths(fileEntity.path);
     project.resolveSourceFileDependencies();
-
-    // const ast = tsquery.ast(sourceFile[0].getText()); 
-
-    // const nodes = tsquery(ast, ':declaration');
-    // console.log(`tsquery:declaration `,  (nodes)); // any
-
-
-    const mySetDecl = sourceFile[0]
-    // console.log(`JSAPIRequest=> text\n//////////////////\n${mySetDecl.getText()}\n//////////////////\n`); // any
-    // console.log(`JSAPIRequest=> getLeadingCommentRange,\n`, mySetDecl.getLeadingCommentRanges().pop()?.getText()); // any
-
-
-
-    const interfaces =[]
-     mySetDecl.forEachChild(node => {
+    const mySetDecl = sourceFile[0];
+    const data: ExtractedData = {} as any;
+    mySetDecl.forEachChild(node => {
         if (Node.isInterfaceDeclaration(node)) {
-            console.log(`name:`, node.getName(),"text:========\n"+ node.getJsDocs().map(j=>j.getInnerText())+'\n============/'); // any
-          
-            node.getProperties().forEach(property=>{
-                console.log(`jsdoc:`,property.getName(),'----', property.getJsDocs().map(j=>j.getInnerText()))
+            const nodeData: NodeData = {
+                name: '',
+                desc: '',
+                props: [],
+            };
+            nodeData['name'] = node.getName();
+            nodeData['desc'] = node.getJsDocs().map(j => j.getInnerText()).join('<br/>')
+
+            node.getProperties().forEach(property => {
+                const jsdocOfProp = property.getJsDocs().map(j => j.getInnerText()).join('<br/>');
+                const defaultValue = jsdocOfProp.match(/\[(.*?)\]/m,)?.[1].split('=')?.[1]
+                let desc = property.getJsDocs().map(j => j.getInnerText()).join('<br/>');
+                if (defaultValue) {
+                    desc = desc.replace(/\[(.*?)\]/m, '').trim()
+                }
+                const typeName = property.getType().getText();
+                nodeData['props'].push({
+                    name: property.getName(),
+                    desc,
+                    typeName: typeName.startsWith('(') ? 'Function' : typeName.replace(/\|/g,'\\|'),
+                    required: !property.hasQuestionToken(),
+                    defaultValue,
+                })
             })
-            node.getMembers().forEach(property=>{
-                console.log(`jsdoc:mem`,property.getKindName(),'----', property.getJsDocs().map(j=>j.getInnerText()))
-            })
-            // return node; // stops iterating over the children and returns this value
-            interfaces.push(node)
+            if (nodeData['name'].endsWith('Main')) {
+                data['Main'] = nodeData;
+                node.getMembers().forEach(property => {
+                    nodeData['desc'] = [nodeData['desc'], ...property.getJsDocs().map(j => j.getInnerText())].join('<br/>')
+                })
+            }
+
+            if (nodeData['name'].endsWith('Option')) {
+                data['Option'] = nodeData;
+            }
+
+            if (nodeData['name'].endsWith('Payload')) {
+                data['Payload'] = nodeData;
+            }
+
+            if (nodeData['name'].endsWith('Return')) {
+                data['Return'] = nodeData;
+            }
+
+            console.log(`LOOP res:====>`, nodeData); // any
+
         }
         // return undefined; // return a falsy value or no value to continue iterating
     });
+    const MDString = mapDataToTemplate({
+        desc: data.Main.desc,
+        paramsDesc: data.Option.desc,
+        paramsTable: data.Option.props.map(p => `| ${p.name} | ${p.typeName} | ${p.required ? "  ✓   " : ""} | ${p.defaultValue || ''} |${p.desc} |`).join('\n'),
+        payloadDesc: data.Payload.desc,
+        payloadTable: data.Payload.props.map(p => `| ${p.name} | ${p.typeName} | ${p.defaultValue || ''} | ${p.desc} |`).join('\n'),
+        returnsDesc: data.Return.desc,
+        returnsTable: data.Return.props.toLocaleString()
+    });
+    console.log(`LOOP res final:====>`, MDString); // any 
 
-    // console.log(`JSAPIRequest=> interfaces,\n`, interfaces); // any
 
-    // let sourceFileOutPut = '## hehe';
-    // sourceFileOutPut += sourceFile[0].getSourceFile();
+    const fullPath = path.join(outDir, fileEntity.path.replace('.ts', '.md')) 
+ 
+    outputFileSync(fullPath, MDString);
 
-
-    // // output
-    // writeFile(path.resolve(outDir,fileEntity.path),
-    //     sourceFileOutPut,{},(e)=>{throw e})
 
 }
 
 const Extractor = {
     extract
-
 }
 export default Extractor

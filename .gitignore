@@ -4,3 +4,4 @@ build
 tst2md
 input
 output
+yarn*.log

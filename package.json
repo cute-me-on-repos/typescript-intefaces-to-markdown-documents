@@ -26,11 +26,14 @@
   },
   "devDependencies": {
     "@types/node": "^17.0.18",
-    "@types/yargs": "^17.0.8",
-    "pkg": "^5.5.2",
-    "typescript": "^4.5.5"
+    "@types/yargs": "^17.0.8"
   },
   "dependencies": {
+    "@phenomnomnominal/tsquery": "^4.2.0",
+    "pkg": "^5.5.2",
+    "serialize-javascript": "^6.0.0",
+    "ts-morph": "^13.0.3",
+    "typescript": "^4.5.5",
     "yargs": "^17.3.1"
   }
 }

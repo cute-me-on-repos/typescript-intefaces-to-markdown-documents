@@ -1,9 +1,10 @@
 import type { Arguments, CommandBuilder } from 'yargs';
 import { readFileSync } from 'fs';
 import { FileEntity } from '../entities/fileEntity';
+import Extractor from '../compiler/extractor';
 type Options = {
     files?: string[] | string;
-    outDir?: string
+    outDir: string
 };
 
 export const command: string[] = ['$0 [outDir] [files..]', 'compile [outDir] [files..]'];
@@ -22,7 +23,7 @@ export const builder: CommandBuilder<Options, Options> = (yargs) =>
 
 
 export const handler = (argv: Arguments<Options>): void => {
-    let { files } = argv
+    let { files, outDir } = argv
     if (!files) {
         console.error("No file detected.")
         process.exit(1);
@@ -39,8 +40,10 @@ export const handler = (argv: Arguments<Options>): void => {
     const fileEntities:Array<FileEntity> = [];
 
     files.forEach(path => {
-        fileEntities.push(new FileEntity(path));
-        console.log(fileEntities[fileEntities.length-1].preview());
+        const newFileEntity = new FileEntity(path)
+        fileEntities.push(newFileEntity);
+        // console.log(newFileEntity.preview());
+        Extractor.extract(newFileEntity, outDir)
     });
 
 

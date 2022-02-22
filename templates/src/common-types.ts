@@ -2,11 +2,11 @@ export interface JSApi<OptionData, SuccessData, ErrorData> {
   (
     options?: OptionData & {
       /**
-       * @description This is a request options property
+       * @description Callback function khi gọi JSApi thành công
        */
       success?: (response?: SuccessData) => void;
       /**
-       * @description This is a request options property
+       * @description Callback function khi gọi JSApi thất bại
        */
       fail?: (error?: ErrorData) => void;
     }

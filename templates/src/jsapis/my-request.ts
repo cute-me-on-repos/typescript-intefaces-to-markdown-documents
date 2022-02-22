@@ -21,7 +21,7 @@ type OptionData = {
    */
   method?: string;
   /**
-   * @description This is a property property
+   * @description This is a progress property
    */
   progress?: (progress: number) => void;
 };

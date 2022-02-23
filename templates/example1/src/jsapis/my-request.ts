@@ -41,9 +41,6 @@ export interface JSAPIRequestMain {
   ): JSAPIRequestReturn;
 }
 
-
-declare const test: JSAPIRequestMain;
-test()
 /**
  * Để cấu hình việc gọi network, bạn cần truyền một params object:
  */
@@ -101,13 +98,4 @@ export interface JSAPIRequestSuccessPayload<Data extends Object = {}> {
 export type JSAPIRequestReturn = undefined
 /// khi dung ben tinitype
 
-declare const myRequest: JSAPIRequestMain;
-
-const testReturn = myRequest<{ va: string }>({
-  url: "",
-  success: (p) => {
-    console.log(p.data.va);
-  },
-});
-
-
+declare const myRequest: JSAPIRequestMain; 

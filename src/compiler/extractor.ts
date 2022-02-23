@@ -5,7 +5,7 @@ import { Node, Project, ScriptTarget } from "ts-morph";
 import { FileEntity } from "../entities/fileEntity";
 import { mapDataToTemplate } from "./consts";
 
- 
+
 
 
 interface NodeData {
@@ -27,7 +27,7 @@ interface ExtractedData {
     Return: NodeData,
 }
 
- 
+
 const extract = (fileEntity: FileEntity, outDir: string) => {
     const project = new Project({
         compilerOptions: {
@@ -47,12 +47,12 @@ const extract = (fileEntity: FileEntity, outDir: string) => {
                 props: [],
             };
             nodeData['name'] = node.getName();
-            nodeData['desc'] = node.getJsDocs().map(j => j.getInnerText()).join('<br/>')
+            nodeData['desc'] = node.getJsDocs().map(j => j.getInnerText()).join('\n<br/>\n')
 
             node.getProperties().forEach(property => {
-                const jsdocOfProp = property.getJsDocs().map(j => j.getInnerText()).join('<br/>');
+                const jsdocOfProp = property.getJsDocs().map(j => j.getInnerText()).join('\n<br/>\n');
                 const defaultValue = jsdocOfProp.match(/\[(.*?)\]/m,)?.[1].split('=')?.[1]
-                let desc = property.getJsDocs().map(j => j.getInnerText()).join('<br/>');
+                let desc = property.getJsDocs().map(j => j.getInnerText()).join('\n<br/>\n');
                 if (defaultValue) {
                     desc = desc.replace(/\[(.*?)\]/m, '').trim()
                 }
@@ -60,7 +60,7 @@ const extract = (fileEntity: FileEntity, outDir: string) => {
                 nodeData['props'].push({
                     name: property.getName(),
                     desc,
-                    typeName: typeName.startsWith('(') ? 'Function' : typeName.replace(/\|/g,'\\|'),
+                    typeName: typeName.startsWith('(') ? 'Function' : typeName.replace(/\|/g, '\\|'), // escape table char
                     required: !property.hasQuestionToken(),
                     defaultValue,
                 })
@@ -68,7 +68,7 @@ const extract = (fileEntity: FileEntity, outDir: string) => {
             if (nodeData['name'].endsWith('Main')) {
                 data['Main'] = nodeData;
                 node.getMembers().forEach(property => {
-                    nodeData['desc'] = [nodeData['desc'], ...property.getJsDocs().map(j => j.getInnerText())].join('<br/>')
+                    nodeData['desc'] = [nodeData['desc'], ...property.getJsDocs().map(j => j.getInnerText())].join('\n<br/>\n')
                 })
             }
 
@@ -89,20 +89,21 @@ const extract = (fileEntity: FileEntity, outDir: string) => {
         }
         // return undefined; // return a falsy value or no value to continue iterating
     });
+    console.log("pre final data", data)
     const MDString = mapDataToTemplate({
         desc: data.Main.desc,
         paramsDesc: data.Option.desc,
-        paramsTable: data.Option.props.map(p => `| ${p.name} | ${p.typeName} | ${p.required ? "  ✓   " : ""} | ${p.defaultValue || ''} |${p.desc} |`).join('\n'),
+        paramsTable: data.Option.props.filter(d => d).map(p => `| ${p.name} | ${p.typeName} | ${p.required ? "  ✓   " : ""} | ${p.defaultValue || ''} |${p.desc} |`).join('\n'),
         payloadDesc: data.Payload.desc,
-        payloadTable: data.Payload.props.map(p => `| ${p.name} | ${p.typeName} | ${p.defaultValue || ''} | ${p.desc} |`).join('\n'),
+        payloadTable: data.Payload.props.filter(d => d).map(p => `| ${p.name} | ${p.typeName} | ${p.defaultValue || ''} | ${p.desc} |`).join('\n'),
         returnsDesc: data.Return.desc,
         returnsTable: data.Return.props.toLocaleString()
     });
     console.log(`LOOP res final:====>`, MDString); // any 
 
 
-    const fullPath = path.join(outDir, fileEntity.path.replace('.ts', '.md')) 
- 
+    const fullPath = path.join(outDir, fileEntity.path.replace('.ts', '.md'))
+
     outputFileSync(fullPath, MDString);
 
 

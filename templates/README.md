@@ -1,96 +1,88 @@
 # Cách viết type cho một JSApi
 
-### Bước 1. Tạo một file .ts đại diện cho một JSApi trong thư mục `src/jsapi`
+### Bước 1. Tạo một file .ts đại diện cho một JSApi trong thư mục `src/jsapi`  và thêm hvào header:
+
+```ts
+import { ICommonParams } from '../common-types'
+
+/**
+ * ---
+ * title: <title của docs khi generate>
+ * description: <desc của docs khi generate>
+ * ---
+ */
+
+/**
+ * 
+ * <!-- comment example for developer, docs sẽ không render text này -->
+ */
+```
 
 Ví dụ: `src/jsapi/my-request.ts`
 
-### Bước 2. Một type cho một JSApi sẽ được kế thừa từ interface `JSApi` trong `common-types`
+### Bước 2. trong file ts vừa tạo, export 3 interfaces với format:
+JSAPI<TênApi>Main: interface describe api function
+ex:
+```ts
+export interface JSAPIRequestMain {
+  /**
+    *
+    * <describe jsapi description follows Markdown format>
+    *
+    * ## Sample Code
+    * ### File javascript
+    * ```js
+    *<mini app example code - developer cần thêm example code vào đây cho mỗi api>
+    * ```
+    * ### File txml
+    * ```xml
+    *<mini app example code>
+    * ```
+    */
+  (
+    paramsObject: JSAPITênApiOption<Data>
+  ): JSAPITênApiReturn;
+}
+```
+JSAPI<TênApi>Option: interface này cần extends `ICommonParams<JSAPITênApiSuccessPayload>`, interface này define params object cho js api, ICommonParams là interface describe các common param như callback success,fail,complete;
 
-```js
-import { JSApi } from "../common-types";
+JSAPI<TênApi>SuccessPayload: interface này define payload trả về từ success callbackk
+JSAPI<TênApi>Return: interface này define return của function (hiện tại các jsapi  hầu như đều return void (undefined), có thể để rỗng.
+***Note:***:yêu cầu export interface, không phải typing, interface được viết đơn giản, không nested(xem file example).
+ 
+
+### Bước 3. Thêm description cho mỗi property trong các interface theo format:
+
+ ví dụ: mô tả desc cho prop `data` là required
+```ts
+export interface JSAPIRequestSuccessPayload<Data extends Object = {}> {
+  /**
+   * <description cho property data>
+   */
+  data: Data;
+  // ...codes 
 ```
 
-### Bước 3. Để chương trình hiểu nội dung của type, cần bắt buộc khai báo các keywords sau trong comment block của JSApi
-
-- `@apiName`: Là tên của JSApi (Bắt buộc). Sẽ được hiển thị là title của document.
-- `@description`: Là mô tả của JSApi (Bắt buộc). Sẽ được hiển thị là description của document.
-
-Ví dụ:
-
-```js
-import { JSApi } from "../common-types";
-
-/**
- * @apiName my.request
- * @description This is a my.request type
- */
-export interface MyRequest: JSApi<OptionData, SuccessData, ErrorData>;
+ ví dụ: mô tả desc cho prop `data` là optional
+```ts
+export interface JSAPIRequestSuccessPayload<Data extends Object = {}> {
+  /**
+   * <description cho property data>
+   */
+  data?: Data;
+  // ...codes 
 ```
 
-JSApi interface yêu cầu truyền các types sau
 
-- `OptionData`: Là type của các options truyền vào khi gọi JSApi
-- `SuccessData`: Là type của các dữ liệu trả về khi gọi JSApi thành công
-- `ErrorData`: Là type của các dữ liệu trả về khi gọi JSApi thất bại
-
-Mỗi một thuộc tính của type cần khai báo các keywords sau trong comment block
-
-- `@description`: Mô tả chi tiết về thuộc tính (Bắt buộc). Sẽ được hiển thị là description của một thuộc tính.
-- `@defaultValue`: Giá trị mặc định của thuộc tính (Không bắt buộc). Sẽ được hiển thị là giá trị mặc định của thuộc tính.
-
-Ví dụ:
-
-```js
-import { JSApi } from "../common-types";
-
-/**
- * @apiName my.request
- * @description This is a my.request type
- */
-declare const MyRequest: JSApi<OptionData, SuccessData, ErrorData>;
-
-// Data
-type OptionData = {
+ ví dụ: mô tả desc cho prop `data` là optional nhưng có defaultValue
+```ts
+export interface JSAPIRequestSuccessPayload<Data extends Object = {}> {
   /**
-   * @description This is a url property
+   * [data=1000] <description cho property data>. 
    */
-  url: string;
-  /**
-   * @description This is a method property
-   * @defaultValue "GET"
-   */
-  method?: string;
-  /**
-   * @description This is a property property
-   */
-  progress?: (progress: number) => void;
-};
-
-type SuccessData = {
-  /**
-   * @description This is a status property
-   */
-  status?: string;
-  /**
-   * @description This is a data property
-   */
-  data?: any;
-};
-
-type ErrorData = null;
+  data: any;
+  // ...codes 
 ```
 
-### Lưu ý
-
-1. Keywords dành cho JSApi: `@apiName`, `@description`
-2. Keywords dành cho thuộc tính: `@description`, `@defaultValue`
-3. Nếu thuộc tính là một function sẽ tự tạo bảng params
-
-### Cấu trúc file document cho một JSApi
-
-1. Tên JSApi
-2. Mô tả JSApi
-3. Bảng options: Tên thuộc tính, kiểu dữ liệu, bắt buộc, giá trị mặc định, mô tả thuộc tính
-4. Bảng params cho function trong bảng options (Nếu có):  Tên thuộc tính, kiểu dữ liệu, bắt buộc, giá trị mặc định, mô tả thuộc tính
-5. Bảng dữ liệu trả về khi gọi JSApi thành công (Nếu có): Tên thuộc tính, kiểu dữ liệu, mô tả thuộc tính
-6. Bảng dữ liệu trả về khi gọi JSApi thất bại (Nếu có): Tên thuộc tính, kiểu dữ liệu, mô tả thuộc tính
+ 
+ ***Note:***: Một số JSAPI cần có generict type để support ts, js codesuggestion như my.request. tham khảo https://www.typescriptlang.org/docs/handbook/2/generics.html

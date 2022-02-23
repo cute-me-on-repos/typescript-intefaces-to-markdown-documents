@@ -1,3 +1,7 @@
+import prettier  from "prettier";
+
+
+
 
 
 export const MDJSAPITemplate = `
@@ -25,13 +29,13 @@ $__returns_payload_desc__$
 $__returns_payload_table__$
 `;
 
-export const mapDataToTemplate = ({desc,paramsDesc,paramsTable,payloadDesc,payloadTable,returnsDesc,returnsTable}: {
+export const mapDataToTemplate = ({ desc, paramsDesc, paramsTable, payloadDesc, payloadTable, returnsDesc, returnsTable }: {
     desc: string, paramsDesc: string,
     paramsTable: string, payloadDesc: string,
     payloadTable: string, returnsDesc: string,
     returnsTable: string
 }) => {
-    
+
     let mdString = `${MDJSAPITemplate}`;
     mdString = mdString.replace('$__desc__$', desc);
     mdString = mdString.replace('$__api_params_desc__$', paramsDesc);
@@ -39,10 +43,17 @@ export const mapDataToTemplate = ({desc,paramsDesc,paramsTable,payloadDesc,paylo
     mdString = mdString.replace('$__success_payload_desc__$', payloadDesc);
     mdString = mdString.replace('$__success_payload_table__$', payloadTable);
     mdString = mdString.replace('$__returns_payload_desc__$', returnsDesc);
-    mdString = mdString.replace('$__returns_payload_table__$', returnsTable); 
-    if(!returnsTable && !returnsDesc){
-        mdString = mdString.replace('## Returns','')
+    mdString = mdString.replace('$__returns_payload_table__$', returnsTable);
+    if (!returnsTable && !returnsDesc) {
+        mdString = mdString.replace('## Returns', '')
     }
 
-    return mdString;
+
+    try {
+        return prettier.format(mdString, { semi: false, parser:'markdown' });;
+
+    } catch (error) {
+        console.error(error)
+        return mdString
+    }
 }

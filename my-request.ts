@@ -1,1 +1,0 @@
-myRequest({ url: "" });

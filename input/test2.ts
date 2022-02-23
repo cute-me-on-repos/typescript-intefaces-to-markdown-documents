@@ -1,12 +1,12 @@
 /* eslint-disable @typescript-eslint/ban-types */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
-
-
+import {ICommonParams} from './common-types'
 /**
  * API xịn
  */
- export interface JSAPIRequestMain {
+
+export interface JSAPIRequestMain {
   /**
    *
    * `my.request` là API dùng để thực hiện các network request. Hiện chỉ hỗ trợ những request qua giao thức **https**.
@@ -14,14 +14,15 @@
    *
    * ***Quan trọng***: Bạn cần phải thêm tên miền trong phần **Cài đặt chung** của ứng dụng trên [Tini Console](https://developer.tiki.vn/apps) trước khi sử dụng các Networking API và Webview. Xem phần hướng dẫn [tại đây](/docs/development/tini-console/whitelist-domains).
    */
-  <Data extends Object>(paramsObject: JSAPIRequestOption<Data>): JSAPIRequestReturn;
+  <Data extends Object>(
+    paramsObject: JSAPIRequestOption<Data>
+  ): JSAPIRequestReturn;
 }
-
 
 /**
  * Để cấu hình việc gọi network, bạn cần truyền một params object:
  */
-export interface JSAPIRequestOption<Data extends Object = {}> {
+export type JSAPIRequestOption<Data extends Object = {}> = ICommonParams<Data> & {
   /**
    * Đường dẫn muốn gọi tới.
    */
@@ -33,7 +34,7 @@ export interface JSAPIRequestOption<Data extends Object = {}> {
   /**
    * [method='GET'] - Phương thức gọi network. Mặc định sẽ là GET.
    */
-  method?: Request['method'];
+  method?: Request["method"];
   /**
    * Data kèm theo trong request.
    */
@@ -45,47 +46,15 @@ export interface JSAPIRequestOption<Data extends Object = {}> {
   /**
    * [dataType='JSON'] - Quy định định dạng dữ liệu (data format) trả về sau request. Hỗ trợ JSON, text, base64 và arraybuffer; mặc định là JSON.
    */
-  dataType?: 'JSON' | 'TEXT' | 'BASE64' | 'arraybuffer';
+  dataType?: "JSON" | "TEXT" | "BASE64" | "arraybuffer";
   /**
    * [includeHeader=false] - Quy định dữ liệu trả về trường hợp thành công có bao gồm headers hay không.
    */
   includeHeader?: boolean;
-  /**
-   * Callback function khi việc gọi network thành công.
-   */
-  success?: (
-    /**
-     * Callback success function payload
-     * @param {Object} payload
-     */
-    payload: JSAPIRequestSuccessPayload<Data>,
-  ) => void | Promise<void>;
-  /**
-   * Callback function khi việc gọi network thất bại.
-   */
-  fail?: (
-    /**
-     * Callback fail function details
-     * @param {Object} errorDetails
-     */
-    errorDetails: {
-      /**
-       * Error name
-       */
-      error: string;
-      /**
-       * Error message
-       */
-      errorMessage: string;
-    },
-  ) => void | Promise<void>;
-  /**
-   * Callback function khi việc gọi network kết thúc cho dù thành công hay thất bại.
-   */
-  complete?: Function;
+  
 }
 
- export interface JSAPIRequestSuccessPayload<Data extends Object = {}> {
+export interface JSAPIRequestSuccessPayload<Data extends Object = {}> {
   /**
    * Dữ liệu trả về. Định dạng của nó phụ thuộc vào tuộc tính dataType.
    */
@@ -102,7 +71,7 @@ export interface JSAPIRequestOption<Data extends Object = {}> {
   /**
    * [statusText='OK'] Thông điệp trả về tương ứng với mã trả về. Mặc định sẽ là OK.
    */
-  statusText: 'OK' | 'Continue' | 'Not Found';
+  statusText: "OK" | "Continue" | "Not Found";
 }
 
 /**
@@ -119,8 +88,11 @@ export interface JSAPIRequestReturn {
 declare const myRequest: JSAPIRequestMain;
 
 myRequest<{ va: string }>({
-  url: '',
+  url: "",
   success: (p) => {
     console.log(p.data.va);
   },
 });
+
+
+ 

@@ -24,7 +24,7 @@ import { JSApi } from "../common-types";
  * @apiName my.request
  * @description This is a my.request type
  */
-declare const MyRequest: JSApi<OptionData, SuccessData, ErrorData>;
+export interface MyRequest: JSApi<OptionData, SuccessData, ErrorData>;
 ```
 
 JSApi interface yêu cầu truyền các types sau

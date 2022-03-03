@@ -1,5 +1,5 @@
-/* eslint-disable prettier/prettier */
-import {JSAPIRequestOption} from "./src/jsapi/my-request";
+
+import {JSAPIRequestOption} from "./src/jsapis/my-request";
 
 export default class NetworkBridgePlugin {
   jsApiNames = ['request'];

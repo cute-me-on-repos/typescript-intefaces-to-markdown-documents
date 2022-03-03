@@ -1,3 +1,7 @@
+///<reference path="../../node_modules/@tiki.vn/tini-types/types/global.d.ts"/>
+///<reference path="./output/comon-types.d.ts"/>
+///<reference path="./output/jsapis/my-request.d.ts"/>
+
 interface Userdata {
   username: string,
   id: number

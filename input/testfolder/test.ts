@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/ban-types */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
-import { ICommonParams } from '../common-types'
+import { ICommonParams } from '../../common-types'
 
 /**
  * ---

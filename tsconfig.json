@@ -11,5 +11,5 @@
     "importHelpers": false
   },"include": ["src"],
 
-  "exclude": ["node_modules"]
+  "exclude": ["node_modules", "templates", "src/template","input","output", "common-types.ts"]
 }

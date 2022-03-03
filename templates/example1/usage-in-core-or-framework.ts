@@ -1,30 +1,28 @@
 
-import {JSAPIRequestOption} from "./src/jsapis/my-request";
+import { JSAPIRequestOption } from './src/jsapis/my-request'
 
 export default class NetworkBridgePlugin {
   jsApiNames = ['request'];
 
-  bridgeCallAsync(api: string, params: any, context: Record<string, any>): void {
+  bridgeCallAsync (api: string, params: any, context: Record<string, any>): void {
     switch (api) {
       case 'request':
-        return this.request(params as JSAPIRequestOption, context);
-    //    ....
+        return this.request(params as JSAPIRequestOption, context)
+        //    ....
       default:
         context.callBridge(api, params, (response) => {
-          const { data, status } = response;
+          const { data, status } = response
           if (status === 'success') {
-            context.success(data);
+            context.success(data)
           } else {
-            context.fail(data);
+            context.fail(data)
           }
-        });
-        break;
+        })
+        break
     }
   }
 
-  request(params: JSAPIRequestOption, context: any): void {
+  request (params: JSAPIRequestOption, context: any): void {
   // do stuff
   }
-
- 
 }

@@ -11,7 +11,7 @@ import { ICommonParams } from '../../common-types'
  */
 
 /**
- * 
+ *
  * <!-- comment example for developer -->
  */
 export interface JSAPIRequestMain {
@@ -33,7 +33,7 @@ export interface JSAPIRequestMain {
     *     y: ''
     *   },
     *   headers: {
-    *     'content-type': 'application/json' 
+    *     'content-type': 'application/json'
     *   },
     *   success (res) {
     *     console.log(res.data)
@@ -74,7 +74,7 @@ export interface JSAPIRequestOption<Data extends Object = {}> extends ICommonPar
   /**
    * [method='GET'] Phương thức gọi network. Mặc định sẽ là GET.
    */
-  method?: Request["method"];
+  method?: Request['method'];
   /**
    * Data kèm theo trong request body.
    */
@@ -86,7 +86,7 @@ export interface JSAPIRequestOption<Data extends Object = {}> extends ICommonPar
   /**
    * [dataType='JSON'] Quy định định dạng dữ liệu (data format) trả về sau request. Hỗ trợ JSON, text, base64 và arraybuffer; mặc định là JSON.
    */
-  dataType?: "JSON" | "TEXT" | "BASE64" | "arraybuffer";
+  dataType?: 'JSON' | 'TEXT' | 'BASE64' | 'arraybuffer';
   /**
    * [includeHeader=false] Quy định dữ liệu trả về trường hợp thành công có bao gồm headers hay không.
    */
@@ -111,10 +111,10 @@ export interface JSAPIRequestSuccessPayload<Data extends Object = {}> {
   /**
    * [statusText='OK'] Thông điệp trả về tương ứng với mã trả về. Mặc định sẽ là OK.
    */
-  statusText: "OK" | "Continue" | "Not Found";
+  statusText: 'OK' | 'Continue' | 'Not Found';
 }
 
 /**
  * `my.request()` là một void function
  */
-export interface JSAPIRequestReturn { } 
+export interface JSAPIRequestReturn { }

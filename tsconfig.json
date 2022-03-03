@@ -1,7 +1,9 @@
 {
   "compilerOptions": {
     "target": "es5",
-    "lib": ["es2021"],
+    "lib": [
+      "es2021"
+    ],
     "module": "commonjs",
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
@@ -9,7 +11,17 @@
     "skipLibCheck": true,
     "outDir": "build",
     "importHelpers": false
-  },"include": ["src"],
-
-  "exclude": ["node_modules", "templates", "src/template","input","output", "common-types.ts", ".*"]
+  },
+  "include": [
+    "src"
+  ],
+  "exclude": [
+    "node_modules",
+    "templates",
+    "src/template",
+    "input",
+    "output",
+    "common-types.ts",
+    ".*"
+  ]
 }

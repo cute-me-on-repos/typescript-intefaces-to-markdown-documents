@@ -1,5 +1,5 @@
 export interface ICommonParams<P> {
-    /**
+  /**
    * Callback function khi việc gọi network thành công.
    */
   success?: (

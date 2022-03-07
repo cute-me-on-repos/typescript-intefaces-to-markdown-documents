@@ -18,7 +18,7 @@
     "start": "npx tsc -w",
     "test": "echo \"Error: no test specified\" && exit 1",
     "package": "pkg . --targets node14-macos-x64 --output tst2md",
-    "archive": "tar -cvzf tst2md-macos-x64.tar.gz",
+    "archive": "tar -cvzf tst2md-macos-x64.tar.gz tst2md",
     "signature": "sha256sum tst2md-macos-x64.tar.gz",
     "lint": "eslint src/**/*.ts input/**/*.ts",
     "lint:fix": "yarn lint --fix"

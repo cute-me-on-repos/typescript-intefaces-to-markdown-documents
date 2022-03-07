@@ -1,8 +1,7 @@
 ## Quickstarts
 
 ```bash
-# term 1
-rm -rf ./output ./build && yarn && yarn start
-# term 2
-node ./build/tst2md.js output input/*.ts
+# term
+rm -rf ./output ./build && yarn
+node ./build/tst2md.js compile --out-dir=output --no-watch --log --files ./input/**/*.ts
 ```

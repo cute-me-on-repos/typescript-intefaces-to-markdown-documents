@@ -1,10 +1,12 @@
-import { outputFileSync } from 'fs-extra'
+import { outputFile, outputFileSync } from 'fs-extra'
 import path from 'path'
-import { Node, Project, ScriptTarget } from 'ts-morph'
+import prettier from 'prettier'
+import { Node, Project, ProjectOptions, ScriptTarget } from 'ts-morph'
 import { FileEntity } from '../entities/fileEntity'
-import { mapDataToTemplate } from './consts'
+import { mapDataToTemplate, prettierConfigTS } from './consts'
 
 interface NodeData {
+  text: string;
   name: string;
   desc: string;
   props: {
@@ -22,26 +24,35 @@ interface ExtractedData {
   Payload: NodeData;
   Return: NodeData;
 }
-
+const projectOption:ProjectOptions = {
+  compilerOptions: {
+    target: ScriptTarget.ES2020,
+    skipAddingFilesFromTsConfig: true,
+    declaration: true
+  }
+}
 const extract = (fileEntity: FileEntity, outDir: string) => {
-  const project = new Project({
-    compilerOptions: {
-      target: ScriptTarget.ES2020,
-      skipAddingFilesFromTsConfig: true
-    }
-  })
-  const sourceFile = project.addSourceFilesAtPaths(fileEntity.path)
+  console.log('extracting ' + fileEntity.path)
+  const project = new Project(projectOption)
+  const sourceFiles = project.addSourceFilesAtPaths(fileEntity.path)
   project.resolveSourceFileDependencies()
-  const mySetDecl = sourceFile[0]
+  const sourceFile = sourceFiles[0]
+
+  project.addDirectoryAtPathIfExists
   const data: ExtractedData = {} as ExtractedData
 
-  mySetDecl.forEachChild((node) => {
+  const interfaceTexts = [] as string[]
+  sourceFile.forEachChild((node) => {
     if (Node.isInterfaceDeclaration(node)) {
       const nodeData: NodeData = {
         name: '',
         desc: '',
-        props: []
+        props: [],
+        text: node.getFullText()
+          .replace(/export default /g, '')
+          .replace(/export /g, '')
       }
+      interfaceTexts.push(nodeData.text)
       nodeData.name = node.getName()
       nodeData.desc = node
         .getJsDocs()
@@ -51,6 +62,7 @@ const extract = (fileEntity: FileEntity, outDir: string) => {
       node.getProperties().forEach((property) => {
         const jsdocOfProp = property
           .getJsDocs()
+
           .map((j) => j.getInnerText())
           .join('\n<br/>\n')
         const defaultValue = jsdocOfProp
@@ -96,11 +108,11 @@ const extract = (fileEntity: FileEntity, outDir: string) => {
         data.Return = nodeData
       }
 
-      console.log('LOOP res:====>', nodeData) // any
+      // console.log('LOOP res:====>', nodeData) // any
     }
     // return undefined; // return a falsy value or no value to continue iterating
   })
-  console.log('pre final data', data)
+  // console.log('pre final data', data)
   const MDString = mapDataToTemplate({
     desc: data.Main.desc,
     paramsDesc: data.Option.desc,
@@ -122,13 +134,23 @@ const extract = (fileEntity: FileEntity, outDir: string) => {
       )
       .join('\n'),
     returnsDesc: data.Return.desc,
-    returnsTable: data.Return.props.toLocaleString()
+    returnsTable: data.Return.props
+    // .filter((d) => d)
+      .map(
+        (p) =>
+          `| ${p.name} | ${p.typeName} | ${p.defaultValue || ''} | ${p.desc} |`
+      )
+      .join('\n')
   })
-  console.log('LOOP res final:====>', MDString) // any
+  // console.log('LOOP res final:====>', MDString) // any
 
-  const fullPath = path.join(outDir, fileEntity.path.replace('.ts', '.md'))
+  const fullPathMD = path.join(outDir, path.basename(fileEntity.path.replace('.ts', '.md')))
+  const fullPathDeclareFile = path.join(outDir, path.basename(fileEntity.path.replace('.ts', '.d.ts')))
 
-  outputFileSync(fullPath, MDString)
+  outputFile(fullPathMD, MDString)
+  const declarationString = `/// <reference path="my-common-params.d.ts"/>
+declare namespace my {${interfaceTexts.join('\n')}}`
+  outputFile(fullPathDeclareFile, prettier.format(declarationString, prettierConfigTS))
 }
 
 const Extractor = {

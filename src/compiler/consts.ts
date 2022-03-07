@@ -1,5 +1,7 @@
-import prettier from 'prettier'
+import prettier, { Options } from 'prettier'
 
+const outputTableHeader = `| Thuộc tính | Kiểu dữ liệu | Default | Mô tả |
+| ---------- | ------------ | ----- | ----- |`
 export const MDJSAPITemplate = `
 $__desc__$
 
@@ -15,15 +17,16 @@ $__api_params_table__$
 
 $__success_payload_desc__$
 
-| Thuộc tính | Kiểu dữ liệu | Default | Mô tả |
-| ---------- | ------------ | ----- | ----- |
+${outputTableHeader}
 $__success_payload_table__$
 
 ## Returns
 
 $__returns_payload_desc__$
+
 $__returns_payload_table__$
 `
+export const prettierConfigMD:Options = { semi: false, parser: 'markdown', singleQuote: true }
 
 export const mapDataToTemplate = ({
   desc,
@@ -49,15 +52,20 @@ export const mapDataToTemplate = ({
   mdString = mdString.replace('$__success_payload_desc__$', payloadDesc)
   mdString = mdString.replace('$__success_payload_table__$', payloadTable)
   mdString = mdString.replace('$__returns_payload_desc__$', returnsDesc)
-  mdString = mdString.replace('$__returns_payload_table__$', returnsTable)
+  mdString = mdString.replace('$__returns_payload_table__$', returnsTable ? `${outputTableHeader}\n${returnsTable}` : '')
   if (!returnsTable && !returnsDesc) {
     mdString = mdString.replace('## Returns', '')
   }
 
   try {
-    return prettier.format(mdString, { semi: false, parser: 'markdown' })
+    return prettier.format(mdString, prettierConfigMD)
   } catch (error) {
     console.error(error)
     return mdString
   }
+}
+
+export const prettierConfigTS:Options = {
+  parser: 'typescript',
+  singleQuote: true
 }

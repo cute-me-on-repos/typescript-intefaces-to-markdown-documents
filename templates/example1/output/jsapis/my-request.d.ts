@@ -1,7 +1,6 @@
-/// <reference no-default-lib="true" />
 
 declare namespace my {
- interface JSAPIRequestMain {
+  interface JSAPIRequestMain {
     /**
      *
      * `my.request` là API dùng để thực hiện các network request. Hiện chỉ hỗ trợ những request qua giao thức **https**.
@@ -13,14 +12,14 @@ declare namespace my {
       paramsObject: JSAPIRequestOption<JSAPIRequestSuccessPayload<Data>>
     ): JSAPIRequestReturn;
   }
-  
+
   /**
    * Để cấu hình việc gọi network, bạn cần truyền một params object:M<br./>
-   * 
-   * 
-   * 
+   *
+   *
+   *
    */
-   type JSAPIRequestOption<Data extends Object = {}> = ICommonParams<Data> & {
+  interface JSAPIRequestOption<Data extends Object = {}> extends ICommonParams<Data> {
     /**
      * Đường dẫn muốn gọi tới.
      */
@@ -32,7 +31,7 @@ declare namespace my {
     /**
      * [method='GET'] - Phương thức gọi network. Mặc định sẽ là GET.
      */
-    method?: Request["method"];
+    method?: Request['method'];
     /**
      * Data kèm theo trong request.
      */
@@ -44,15 +43,15 @@ declare namespace my {
     /**
      * [dataType='JSON'] - Quy định định dạng dữ liệu (data format) trả về sau request. Hỗ trợ JSON, text, base64 và arraybuffer; mặc định là JSON.
      */
-    dataType?: "JSON" | "TEXT" | "BASE64" | "arraybuffer";
+    dataType?: 'JSON' | 'TEXT' | 'BASE64' | 'arraybuffer';
     /**
      * [includeHeader=false] - Quy định dữ liệu trả về trường hợp thành công có bao gồm headers hay không.
      */
     includeHeader?: boolean;
-    
+
   }
-  
-   interface JSAPIRequestSuccessPayload<Data extends Object = {}> {
+
+  interface JSAPIRequestSuccessPayload<Data extends Object = {}> {
     /**
      * Dữ liệu trả về. Định dạng của nó phụ thuộc vào tuộc tính dataType.
      */
@@ -62,13 +61,11 @@ declare namespace my {
      */
     status: number;
   }
-  
+
   /**
    * task API trả về network request task. Bạn có thể thực hiện huỷ việc gọi network thông qua network request task.
    */
-   type JSAPIRequestReturn = void
+  interface JSAPIRequestReturn {}
   /// khi dung ben tinitype
-  
-  declare const request: JSAPIRequestMain;
-}
 
+}

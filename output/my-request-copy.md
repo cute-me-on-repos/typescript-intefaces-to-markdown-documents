@@ -15,17 +15,17 @@ description: JSAPI for Network
 
 ## Sample Code
 
-### File javascript
+### Javascript
 
 ```js
 my.request({
-  url: "https://example.api/user",
+  url: 'https://example.api/user',
   data: {
-    x: "",
-    y: "",
+    x: '',
+    y: '',
   },
   headers: {
-    "content-type": "application/json",
+    'content-type': 'application/json',
   },
   success(res) {
     console.log(res.data)
@@ -33,7 +33,28 @@ my.request({
 })
 ```
 
-### File txml
+### Typescript
+
+```ts
+interface UserData {
+  userName: string
+}
+my.request<UserData>({
+  url: 'https://example.api/user',
+  data: {
+    x: '',
+    y: '',
+  },
+  headers: {
+    'content-type': 'application/json',
+  },
+  success(res) {
+    console.log(res.data.userName)
+  },
+})
+```
+
+### TXML file
 
 ```xml
 <view class="page">
@@ -76,4 +97,8 @@ my.request({
 
 ## Returns
 
-`my.request()` là một void function
+`my.request()` trả về một RequestTask chứa methods abort
+
+| Thuộc tính | Kiểu dữ liệu | Default | Mô tả                 |
+| ---------- | ------------ | ------- | --------------------- |
+| abort      | Function     |         | abort waiting request |

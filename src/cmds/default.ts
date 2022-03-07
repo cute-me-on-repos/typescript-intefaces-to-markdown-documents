@@ -2,7 +2,7 @@
 import type { Arguments, CommandBuilder } from 'yargs'
 import { FileEntity } from '../entities/fileEntity'
 import Extractor from '../compiler/extractor'
-import { outputFileSync, remove } from 'fs-extra'
+import { outputFileSync } from 'fs-extra'
 import path from 'path'
 import prettier from 'prettier'
 import chokidar from 'chokidar'
@@ -10,13 +10,13 @@ import { templates } from '../template'
 import { prettierConfigTS } from '../compiler/consts'
 
 type Options = {
-  files: string[] | string;
+  files?: string[] | string;
   outDir: string;
   watch?: boolean,
-  log: boolean
+  log?: boolean
 };
 
-export const command = '$0 compile [outDir] [watch] [log] <files..>'
+export const command = '$0 compile [outDir] [watch] [log] [files..]'
 export const desc = 'compile ts types to markdown files'
 
 export const builder: CommandBuilder<Options, Options> = (yargs) =>
@@ -31,16 +31,16 @@ export const builder: CommandBuilder<Options, Options> = (yargs) =>
     })
     .option('watch', {
       describe: 'enable watching file change',
-      default: false
+      default: true
     })
     .option('log', {
       describe: 'enable console logging',
-      default: false
+      default: true
     })
     .example('$0 compile --out-dir=output --no-watch --log --files ./input/**/*.ts', 'compile all ts files to ./output folder')
 
 export const handler = (argv: Arguments<Options>): void => {
-  if (argv.log) {
+  if (!argv.log) {
     console.log = () => { return undefined }
   }
   console.log('argv:', argv)

@@ -1,4 +1,4 @@
-import { outputFile, outputFileSync } from 'fs-extra'
+import { outputFile } from 'fs-extra'
 import path from 'path'
 import prettier from 'prettier'
 import { Node, Project, ProjectOptions, ScriptTarget } from 'ts-morph'

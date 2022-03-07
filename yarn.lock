@@ -2125,6 +2125,20 @@ tslib@^1.8.1:
   resolved "https://registry.yarnpkg.com/tslib/-/tslib-1.14.1.tgz#cf2d38bdc34a134bcaf1091c41f6619e2f672d00"
   integrity sha512-Xni35NKzjgMrwevysHTCArtLDpPvye8zV/0E4EyYn43P7/7qvQwPh9BGkHewbMulVntbigmcT7rdX3BNo9wRJg==
 
+tst2md@^1.0.3:
+  version "1.0.3"
+  resolved "https://registry.yarnpkg.com/tst2md/-/tst2md-1.0.3.tgz#c370d02cb2773483998c25c9750f125137bcc945"
+  integrity sha512-jVsBeEhVcQd4yvsaO/Eek7Ir1K1ssd1hFq4xTyoXC1+Ijlwy3lfybPtmCrSLAE4nMoKQdxoKdRhxMC62iMzuCw==
+  dependencies:
+    "@types/prettier" "^2.4.4"
+    chokidar "^3.5.3"
+    fs-extra "^10.0.0"
+    pkg "^5.5.2"
+    prettier "^2.5.1"
+    ts-morph "^13.0.3"
+    typescript "4.5"
+    yargs "^17.3.1"
+
 tsutils@^3.21.0:
   version "3.21.0"
   resolved "https://registry.yarnpkg.com/tsutils/-/tsutils-3.21.0.tgz#b48717d394cea6c1e096983eed58e9d61715b623"

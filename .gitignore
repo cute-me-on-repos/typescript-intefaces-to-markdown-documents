@@ -7,3 +7,4 @@ tst2md
 # output # examples
 yarn*.log
 tst2md-macos-x64.tar.gz
+.npmrc

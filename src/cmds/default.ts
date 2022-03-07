@@ -27,17 +27,25 @@ export const builder: CommandBuilder<Options, Options> = (yargs) =>
     })
     .option('outDir', {
       describe: 'output directory',
-      default: './output'
+      default: './output',
+      alias: 'o'
     })
     .option('watch', {
       describe: 'enable watching file change',
-      default: true
+      default: true,
+      alias: 'w'
+
     })
     .option('log', {
       describe: 'enable console logging',
-      default: true
+      default: true,
+      alias: 'l'
+
     })
+    .help()
+    .demandOption(['outDir'], 'Please provide both run and path arguments to work with this tool')
     .example('$0 compile --out-dir=output --no-watch --log --files ./input/**/*.ts', 'compile all ts files to ./output folder')
+    .example('$0 node ./build/tst2md.js compile -o output --no-watch -l --files ./input/*.ts', 'compile all ts files to ./output folder')
 
 export const handler = (argv: Arguments<Options>): void => {
   if (!argv.log) {

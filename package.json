@@ -1,6 +1,6 @@
 {
   "name": "tst2md",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "a ts types to markdown compiler",
   "main": "src/tst2md.js",
   "author": {
@@ -14,8 +14,8 @@
     "tst2md": "./build/tst2md.js"
   },
   "scripts": {
-    "build": "npx tsc",
-    "start": "npx tsc -w",
+    "build": "yarn lint:fix && tsc && yarn package && yarn archive && yarn signature",
+    "start": "tsc -w",
     "test": "echo \"Error: no test specified\" && exit 1",
     "package": "pkg . --targets node14-macos-x64 --output tst2md",
     "archive": "tar -cvzf tst2md-macos-x64.tar.gz tst2md",
@@ -49,6 +49,7 @@
     "pkg": "^5.5.2",
     "prettier": "^2.5.1",
     "ts-morph": "^13.0.3",
+    "tst2md": "^1.0.3",
     "typescript": "4.5",
     "yargs": "^17.3.1"
   }

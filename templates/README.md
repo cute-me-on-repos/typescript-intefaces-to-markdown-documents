@@ -1,4 +1,4 @@
-# Cách viết type cho một JSApi
+## Cách viết type cho một JSApi
 
 ### Bước 1. Tạo một file .ts đại diện cho một JSApi trong thư mục `src/jsapi`  và thêm hvào header:
 
@@ -86,3 +86,50 @@ export interface JSAPIRequestSuccessPayload<Data extends Object = {}> {
 
  
  ***Note:***: Một số JSAPI cần có generict type để support ts, js codesuggestion như my.request. tham khảo https://www.typescriptlang.org/docs/handbook/2/generics.html
+
+
+## Flows
+
+
+
+
+New flow for implementing new JSAPI
+
+```plantuml
+'https://plantuml.com/sequence-diagram
+
+@startuml New flow for implementing new JSAPI
+'!includeurl https://cdn.jsdelivr.net/gh/HSLdevcom/hsl-plantuml-theme/hsl-theme.iuml
+autonumber
+ 
+actor "Dev" as Dev 
+entity "MiniApp Repo" as MiniAppRepo 
+entity "docs generator cli" as DocGenCLi
+entity "docs web" as DocPage
+entity "new interface file" as InterfaceFile
+entity "tini-types" as TiniTypes
+entity "CI" as CI
+ 
+
+
+
+Dev -> MiniAppRepo: declare new interface in .ts file(not .d.ts) with the given format in folder src/jsapi-interface 
+activate Dev 
+Dev -> MiniAppRepo: implement the new interface to core/ fw
+Dev -> DocGenCLi: run command generate doc md file and declaration file for tini-types
+activate DocGenCLi
+DocGenCLi -> TiniTypes: create new declaration file d.ts and md file for docs
+deactivate DocGenCLi
+Dev -> DocPage: manual copy the generated .md file to tiki-miniapp-docs
+Dev -> MiniAppRepo: create PR
+CI -> TiniTypes:auto commit new d.ts files to tini types
+activate CI
+CI ->x DocPage: auto commit new md file[not implemented yet, reviewing]
+deactivate CI
+Dev -> MiniAppRepo: merge
+deactivate Dev
+@enduml
+
+```
+
+![generated "New flow for implementing new JSAPI" to svg](./puml-1.svg)

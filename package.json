@@ -1,6 +1,6 @@
 {
   "name": "tst2md",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "a ts types to markdown compiler",
   "main": "src/tst2md.js",
   "author": {

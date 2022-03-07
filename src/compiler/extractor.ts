@@ -147,9 +147,13 @@ const extract = (fileEntity: FileEntity, outDir: string) => {
   const fullPathMD = path.join(outDir, path.basename(fileEntity.path.replace('.ts', '.md')))
   const fullPathDeclareFile = path.join(outDir, path.basename(fileEntity.path.replace('.ts', '.d.ts')))
 
+  const apiName = data.Main.name.slice(5).slice(0, -4)
   outputFile(fullPathMD, MDString)
   const declarationString = `/// <reference path="my-common-params.d.ts"/>
-declare namespace my {${interfaceTexts.join('\n')}}`
+declare namespace my {${interfaceTexts.join('\n')}
+
+const ${apiName[0].toLowerCase() + apiName.slice(1)}:${data.Main.name}
+}`
   outputFile(fullPathDeclareFile, prettier.format(declarationString, prettierConfigTS))
 }
 

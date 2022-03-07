@@ -66,6 +66,5 @@ declare namespace my {
    * task API trả về network request task. Bạn có thể thực hiện huỷ việc gọi network thông qua network request task.
    */
   interface JSAPIRequestReturn {}
-  /// khi dung ben tinitype
 
 }

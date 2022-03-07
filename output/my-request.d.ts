@@ -137,4 +137,6 @@ declare namespace my {
      */
     abort: Function;
   }
+
+  const request: JSAPIRequestMain;
 }
